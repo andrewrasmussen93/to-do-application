@@ -1,0 +1,61 @@
+<%- include('partials/head.ejs') %>
+<body>
+  <%- include('partials/header.ejs') %>
+  <div style="max-width: 576px;" class="m-auto">
+    <div class="container pt-4 pb-4">
+      <p class="text-center mt-lg-3 mt-2">This <span class="fw-bold fst-italic">web application</span> was originally made as a school project, to <span class="fw-bold fst-italic">showcase</span> the use of <span class="fw-bold fst-italic">CRUD</span> operations, using <span class="fw-bold fst-italic">Node.js</span>, <span class="fw-bold fst-italic">Express</span> and <span class="fw-bold fst-italic">MongoDB</span>.</p>
+      <p class="text-center mb-4">Get started by logging in.</p>
+      <form class="row g-3" action="/login" method="post">
+        <div class="col-12">
+          <label class="form-label">Login</label>
+          <label for="username" class="visually-hidden">Username</label>
+          <input type="text" class="form-control shadow-sm" name="username" placeholder="Username *" required>
+        </div>
+        <div class="col-12">
+          <label for="password" class="visually-hidden">Password</label>
+          <input type="password" class="form-control shadow-sm" name="password" placeholder="Password *" required>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn bg-primary bg-gradient text-light shadow-sm">Login</button>
+        </div>
+        <% if (signUpSuccess !== '') { %><p class="text-success"><%= signUpSuccess %></p><% } if (loginResponse !== '') { %><p class="text-danger"><%= loginResponse %></p><% } %>
+      </form>
+      <p class="text-center <% if (signUpSuccess === '' && loginResponse === '') { %>mt-4<% } else { %>mt-0<% } %>">Don't have a user? <span class="fw-bold">Sign up</span> below.</p>
+      <div class="accordion shadow-sm">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button <% if (signUpError === '') { %>class="accordion-button collapsed"<% } else { %>class="accordion-button"<% } %> type="button" data-bs-toggle="collapse" data-bs-target="#signUpForm" aria-expanded="false" aria-controls="signUpForm">
+              Sign Up
+            </button>
+          </h2>
+          <div id="signUpForm" <% if (signUpError === '') { %>class="accordion-collapse collapse"<% } else { %>class="accordion-collapse"<% } %>>
+            <div class="accordion-body">
+              <form class="row g-3" action="" method="post">
+                <% if (signUpError !== '') { %><p class="text-danger"><%= signUpError %></p><% } %>
+                <div class="col-12">
+                  <label for="username" class="visually-hidden">Username</label>
+                  <input type="text" class="form-control shadow-sm" name="username" placeholder="Username *" required>
+                  <div class="form-text">
+                    Your username must be 2-20 characters long, can't contain any special characters, other than dot (.), hyphen (-) and underscore (_), but no more than one in a row, and can't be at the start or ending of your username.
+                  </div>
+                </div>
+                <div class="col-12">
+                  <label for="password" class="visually-hidden">Password</label>
+                  <input type="password" class="form-control shadow-sm" name="password" placeholder="Password *" required>
+                  <div class="form-text">
+                    Make sure to pick a password you'll remember.
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-primary shadow-sm">Sign Up</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+  <%- include('partials/footer.ejs') %>
+</body>
+</html>
