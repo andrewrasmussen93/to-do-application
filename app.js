@@ -2,8 +2,12 @@ const express = require('express');
 const session = require('express-session');
 const app = express();
 const port = process.env.PORT || 3000;
+const path = require('path');
 const dashboard = require('./routes/dashboard');
 const index = require('./routes/index');
+
+// Serve static assets.
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // Set the view engine.
 app.set('view engine', 'ejs');
