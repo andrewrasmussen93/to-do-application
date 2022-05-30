@@ -32,6 +32,12 @@ module.exports = {
             res.send(error);
         }
     },
+    // Logout and clear sessions.
+    logout: (req, res) => {
+        req.session.loggedIn ? req.session.loggedIn = false : req.session.loggedIn = false;
+        req.session.user ? req.session.user = undefined : req.session.user = undefined;    
+        res.redirect('/');
+    },
     // Create a new task.
     createTask: async (req, res) => {
         try {

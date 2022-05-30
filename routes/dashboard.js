@@ -12,11 +12,7 @@ router.get('/', taskController.getDashboard);
 router.post('/', taskController.createTask);
 
 // GET route for log out.
-router.get('/logout', (req, res) => {
-    req.session.loggedIn ? req.session.loggedIn = false : req.session.loggedIn = false;
-    req.session.user ? req.session.user = undefined : req.session.user = undefined;    
-    res.redirect('/');
-});
+router.get('/logout', taskController.logout);
 
 // GET route for deleting and archiving a task.
 router.get('/delete/:id', async (req, res) => {
