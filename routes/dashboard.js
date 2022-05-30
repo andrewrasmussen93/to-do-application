@@ -15,18 +15,7 @@ router.post('/', taskController.createTask);
 router.get('/logout', taskController.logout);
 
 // GET route for deleting and archiving a task.
-router.get('/delete/:id', async (req, res) => {
-    try {
-        if (req.session.loggedIn) {
-            await taskController.deleteTask({ "_id": req.params.id }); // Find task based on id, archive and delete it.        
-            res.redirect('/dashboard');
-        } else {
-            res.redirect('/');
-        }
-    } catch (error) {
-        res.json({ message: `Error in deleting a task route -> ${error.message}` });
-    }
-});
+router.get('/delete/:id', taskController.archiveTask);
 
 // GET route for marking a task as complete.
 router.get('/complete/:id', async (req, res) => {

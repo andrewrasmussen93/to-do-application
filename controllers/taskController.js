@@ -56,17 +56,18 @@ module.exports = {
         } catch (error) {
             res.json({ message: `Error in creating a new task route -> ${error.message}` });
         }
-    },    
+    },
     // Delete and archive a task.
-    deleteTask: async function(query) {
+    archiveTask: async (req, res) => {
         try {
-            const database = await Mongo.mongoConnect(); // Connection to the database.
-            const task = await Task.find(query); // Find task based on query.
-            await Archive.insertMany(task); // Insert the task to archive.
-            await Task.deleteOne(query); // Delete the task.
-            database.close(); // Close database connection.
+            if (req.session.loggedIn) {
+                await handleTasks.deleteTask({ "_id": req.params.id }); // Find task based on id, archive and delete it.        
+                res.redirect('/dashboard');
+            } else {
+                res.redirect('/');
+            }
         } catch (error) {
-            console.log(`Error in deleting a task -> ${error}`);
+            res.json({ message: `Error in deleting a task route -> ${error.message}` });
         }
     },
     // Update a task.

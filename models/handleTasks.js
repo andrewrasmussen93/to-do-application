@@ -42,4 +42,16 @@ module.exports = {
             console.log(`Error in posting a new task -> ${error}`);
         }
     },
+    // Delete and archive a task.
+    deleteTask: async function(query) {
+        try {
+            const database = await Mongo.mongoConnect(); // Connection to the database.
+            const task = await Task.find(query); // Find task based on query.
+            await Archive.insertMany(task); // Insert the task to archive.
+            await Task.deleteOne(query); // Delete the task.
+            database.close(); // Close database connection.
+        } catch (error) {
+            console.log(`Error in deleting a task -> ${error}`);
+        }
+    },
 }
