@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
 const taskController = require('../controllers/taskController');
-
-let errorMessage;
 
 // GET route for dashboard view.
 router.get('/', taskController.getDashboard);

@@ -1,7 +1,7 @@
-const Mongo = require('../models/Mongo');
-const { Task, Archive } = require('../models/Task');
 const handleTasks = require('../models/handleTasks');
 const handleUsers = require('../models/handleUsers');
+
+let errorMessage;
 
 module.exports = {
     // GET dashboard page.
@@ -87,7 +87,7 @@ module.exports = {
     restoreTask: async (req, res) => {
         try {
             if (req.session.loggedIn) {
-                await taskController.updateTask({ "_id": req.params.id }, { "completed": false }); // Find task based on id and mark it as incomplete.
+                await handleTasks.updateTask({ "_id": req.params.id }, { "completed": false }); // Find task based on id and mark it as incomplete.
                 res.redirect('/dashboard');
             } else {
                 res.redirect('/');
