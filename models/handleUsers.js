@@ -45,4 +45,26 @@ module.exports = {
             console.log(`Error in posting a new user -> ${error}`);
         }
     },
+    // Login a user.
+    loginUser: async function(req) {
+        try {
+            const database = await Mongo.mongoConnect(); // Connection to the database.
+            const user = await User.find({ "username": req.body.username }); // Search for username which matches the given req.body.
+            // Check if user exists.
+            if (user.length > 0) {
+                const isPasswordIdentical = await bcrypt.compare(req.body.password, user[0].password); // Compare the password received from req.body with the password matching the user in the database.
+                if (isPasswordIdentical) {
+                    database.close();
+                    return user; // If the passwords match, return the user.
+                } else {
+                    return false; // If the passwords don't match, return false.
+                }
+            } else {
+                return false; // If the user doesn't exist, return false.
+                // TODO: Find a way to show the user if it's the username that doesn't exist or the password that doesn't match.
+            }
+        } catch (error) {
+            console.log(`Error in user login -> ${error}`);
+        }
+    }
 }

@@ -1,6 +1,3 @@
-const bcrypt = require('bcrypt');
-const Mongo = require('../models/Mongo');
-const User = require('../models/User');
 const handleUsers = require('../models/handleUsers');
 
 let signUpSuccess;
@@ -45,25 +42,25 @@ module.exports = {
         }
     },
     // Login a user.
-    loginUser: async function(req) {
+    login: async (req, res) => {
         try {
-            const database = await Mongo.mongoConnect(); // Connection to the database.
-            const user = await User.find({ "username": req.body.username }); // Search for username which matches the given req.body.
-            // Check if user exists.
-            if (user.length > 0) {
-                const isPasswordIdentical = await bcrypt.compare(req.body.password, user[0].password); // Compare the password received from req.body with the password matching the user in the database.
-                if (isPasswordIdentical) {
-                    database.close();
-                    return user; // If the passwords match, return the user.
-                } else {
-                    return false; // If the passwords don't match, return false.
+            const user = await handleUsers.loginUser(req); // Check if user exist and if passwords match.
+            // If user exists and passwords match, login user.
+            if (user) {
+                req.session.user = user; // Save the user in a browser session.
+                req.session.loggedIn = true; // Used for checking if a user is logged in or not.
+                // If session user id matches user id from database, render the dashboard with that specific users username and tasks.
+                if (req.session.user[0]._id.toString() === user[0]._id.toString()) {
+                    res.redirect(`/dashboard`);
                 }
-            } else {
-                return false; // If the user doesn't exist, return false.
-                // TODO: Find a way to show the user if it's the username that doesn't exist or the password that doesn't match.
+            }
+            // If user doesn't exist or passwords don't match, render index view with login error message.
+            else {
+                loginResponse = 'Wrong username or password. Please try again.';
+                res.redirect('/');
             }
         } catch (error) {
-            console.log(`Error in user login -> ${error}`);
+            res.send(error);
         }
     }
 };
