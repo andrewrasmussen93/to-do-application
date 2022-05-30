@@ -33,34 +33,24 @@ module.exports = {
         }
     },
     // Create a new task.
-    postTask: async function(req, success) {
+    createTask: async (req, res) => {
         try {
-            const database = await Mongo.mongoConnect(); // Connection to the database.
-            // Set values for new task.
-            const task = new Task({
-                title: req.body.title,
-                description: req.body.description,
-                deadline: req.body.deadline ? req.body.deadline : null,
-                startDate: new Date(),
-                user: req.session.user[0]._id ? req.session.user[0]._id : null // Attach created task to session user.
-            });
-            // Create the new task in the database.
-            // TODO: Make sure to validate the data before sending it to the database.
-            Task.create(task, function(error) {
-                if (error) {
-                    console.log(`Error in creating a new task to the database -> ${error}`);
-                    success(false);
-                } else {
-                    success(true);
-                    database.close(); // Close database connection.
-                    console.log(task); // Only used for testing purposes.
-                }
-                
-            });
+            if (req.session.loggedIn) {
+                await handleTasks.postTask(req, function(success) {
+                    if (success) {
+                        res.redirect('/dashboard');
+                    } else {
+                        errorMessage = 'Not a valid date. Please try again.';
+                        res.redirect('/dashboard');
+                    }
+                });
+            } else {
+                res.redirect('/');
+            }
         } catch (error) {
-            console.log(`Error in posting a new task -> ${error}`);
+            res.json({ message: `Error in creating a new task route -> ${error.message}` });
         }
-    },
+    },    
     // Delete and archive a task.
     deleteTask: async function(query) {
         try {

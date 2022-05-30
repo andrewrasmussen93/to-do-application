@@ -9,24 +9,7 @@ let errorMessage;
 router.get('/', taskController.getDashboard);
 
 // POST route for create task form.
-router.post('/', async (req, res) => {
-    try {
-        if (req.session.loggedIn) {
-            await taskController.postTask(req, function(success) {
-                if (success) {
-                    res.redirect('/dashboard');
-                } else {
-                    errorMessage = 'Not a valid date. Please try again.';
-                    res.redirect('/dashboard');
-                }
-            });
-        } else {
-            res.redirect('/');
-        }
-    } catch (error) {
-        res.json({ message: `Error in creating a new task route -> ${error.message}` });
-    }
-});
+router.post('/', taskController.createTask);
 
 // GET route for log out.
 router.get('/logout', (req, res) => {
