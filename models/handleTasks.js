@@ -54,4 +54,14 @@ module.exports = {
             console.log(`Error in deleting a task -> ${error}`);
         }
     },
+    // Update a task.
+    updateTask: async function(query, update) {
+        try {
+            const database = await Mongo.mongoConnect(); // Connection to the database.
+            await Task.findOneAndUpdate(query, update, { new: true }); // Find task based on query and update specified parameter.
+            database.close(); // Close database connection.
+        } catch (error) {
+            console.log(`Error in updating a task -> ${error}`);
+        }
+    }
 }

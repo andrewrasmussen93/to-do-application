@@ -70,14 +70,30 @@ module.exports = {
             res.json({ message: `Error in deleting a task route -> ${error.message}` });
         }
     },
-    // Update a task.
-    updateTask: async function(query, update) {
+    // Complete a task.
+    completeTask: async (req, res) => {
         try {
-            const database = await Mongo.mongoConnect(); // Connection to the database.
-            await Task.findOneAndUpdate(query, update, { new: true }); // Find task based on query and update specified parameter.
-            database.close(); // Close database connection.
+            if (req.session.loggedIn) {
+                await handleTasks.updateTask({ "_id": req.params.id }, { "completed": true }); // Find task based on id and mark it as complete.
+                res.redirect('/dashboard');
+            } else {
+                res.redirect('/');
+            }
         } catch (error) {
-            console.log(`Error in updating a task -> ${error}`);
+            res.json({ message: `Error in marking a task as complete route -> ${error.message}` });
+        }
+    },
+    // Restore a task.
+    restoreTask: async (req, res) => {
+        try {
+            if (req.session.loggedIn) {
+                await taskController.updateTask({ "_id": req.params.id }, { "completed": false }); // Find task based on id and mark it as incomplete.
+                res.redirect('/dashboard');
+            } else {
+                res.redirect('/');
+            }
+        } catch (error) {
+            res.json({ message: `Error in marking a task as incomplete route -> ${error.message}` });
         }
     }
 }

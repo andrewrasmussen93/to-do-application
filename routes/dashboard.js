@@ -18,31 +18,9 @@ router.get('/logout', taskController.logout);
 router.get('/delete/:id', taskController.archiveTask);
 
 // GET route for marking a task as complete.
-router.get('/complete/:id', async (req, res) => {
-    try {
-        if (req.session.loggedIn) {
-            await taskController.updateTask({ "_id": req.params.id }, { "completed": true }); // Find task based on id and mark it as complete.
-            res.redirect('/dashboard');
-        } else {
-            res.redirect('/');
-        }
-    } catch (error) {
-        res.json({ message: `Error in marking a task as complete route -> ${error.message}` });
-    }
-});
+router.get('/complete/:id', taskController.completeTask);
 
 // GET route for marking a task as incomplete.
-router.get('/restore/:id', async (req, res) => {
-    try {
-        if (req.session.loggedIn) {
-            await taskController.updateTask({ "_id": req.params.id }, { "completed": false }); // Find task based on id and mark it as incomplete.
-            res.redirect('/dashboard');
-        } else {
-            res.redirect('/');
-        }
-    } catch (error) {
-        res.json({ message: `Error in marking a task as incomplete route -> ${error.message}` });
-    }
-});
+router.get('/restore/:id', taskController.restoreTask);
 
 module.exports = router;
