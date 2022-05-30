@@ -2,7 +2,30 @@ const bcrypt = require('bcrypt');
 const Mongo = require('../models/Mongo');
 const User = require('../models/User');
 
+let signUpSuccess;
+let signUpError;
+let loginResponse;
+
 module.exports = {
+    // GET login page.
+    getIndex: (req, res) => {
+        // If a user is already logged in, redirect them to the dashboard.
+        if (req.session.loggedIn) {
+            res.redirect('/dashboard');
+        }
+        // If a user isn't logged in, render index view.
+        else {
+            res.render('index', {
+                title: 'To-Do Application',
+                signUpSuccess: signUpSuccess ? signUpSuccess : '',
+                signUpError: signUpError ? signUpError : '',
+                loginResponse: loginResponse ? loginResponse : '',
+            });
+            signUpSuccess = '';
+            signUpError = '';
+            loginResponse = '';
+        }
+    },
     // Get one or more users.
     getUser: async function(query, sort) {
         try {

@@ -2,29 +2,8 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
-let signUpSuccess;
-let signUpError;
-let loginResponse;
-
 // GET route for index view.
-router.get('/', (req, res) => {
-    // If a user is already logged in, redirect them to the dashboard.
-    if (req.session.loggedIn) {
-        res.redirect('/dashboard');
-    }
-    // If a user isn't logged in, render index view.
-    else {
-        res.render('index', {
-            title: 'To-Do Application',
-            signUpSuccess: signUpSuccess ? signUpSuccess : '',
-            signUpError: signUpError ? signUpError : '',
-            loginResponse: loginResponse ? loginResponse : '',
-        });
-        signUpSuccess = '';
-        signUpError = '';
-        loginResponse = '';
-    }
-});
+router.get('/', userController.getIndex);
 
 // POST route for sign up form.
 router.post('/', async (req, res) => {
