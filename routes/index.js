@@ -6,22 +6,7 @@ const userController = require('../controllers/userController');
 router.get('/', userController.getIndex);
 
 // POST route for sign up form.
-router.post('/', async (req, res) => {
-    try {
-        await userController.postUser(req, function(success) {
-            if (success) {
-                signUpSuccess = 'User created successfully. You can now login.';
-                res.redirect('/');
-            } else {
-                signUpError = 'Username invalid or already exists. Please pick another.';
-                // TODO: Figure out how to make two separate error messages.
-                res.redirect('/#signUpForm');
-            }
-        });
-    } catch (error) {
-        res.send(error);
-    }
-});
+router.post('/', userController.createUser);
 
 // POST route for login form.
 router.post('/login', async (req, res) => {
