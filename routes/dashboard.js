@@ -6,33 +6,7 @@ const taskController = require('../controllers/taskController');
 let errorMessage;
 
 // GET route for dashboard view.
-router.get('/', async (req, res) => {
-    try {
-        // Check if a user is logged in.
-        if (req.session.loggedIn) {
-            const user = await userController.getUser({ "_id": req.session.user[0]._id }); // Find user in database from req.session.
-            const tasks = await taskController.getTask({ "user": req.session.user[0]._id, "completed": false }); // Find the tasks for the specific user, which isn't complete.
-            const completeTasks = await taskController.getTask({ "user": req.session.user[0]._id, "completed": true }); // Find the tasks for the specific user, which is complete.
-            // If session user id matches user id from database, render the dashboard with that specific users username and tasks.
-            if (req.session.user[0]._id === user[0]._id.toString()) {
-                res.render('dashboard', {
-                    title: 'Dashboard',
-                    username: user[0].username,
-                    tasks: tasks,
-                    completeTasks: completeTasks ? completeTasks : null,
-                    errorMessage: errorMessage ? errorMessage : ''
-                });
-                errorMessage = '';
-            }
-        }
-        // If a user isn't logged in, redirect them to index page.
-        else {
-            res.redirect('/');
-        }
-    } catch (error) {
-        res.send(error);
-    }
-});
+router.get('/', taskController.getDashboard);
 
 // POST route for create task form.
 router.post('/', async (req, res) => {
